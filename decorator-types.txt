@@ -1,0 +1,20 @@
+******** Nest Decorators group
+
+### class decorators example
+- @controller
+
+### Methode decorators example
+-@Get
+-@Post
+-@Put
+
+
+### Argument decorators example
+-@body
+_@param
+-@query
+-@headers
+
+#### further readings
+- how to make custom pipes
+
