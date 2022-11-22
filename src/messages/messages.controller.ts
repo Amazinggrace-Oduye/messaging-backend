@@ -4,23 +4,31 @@ import {
   Post,
   Param,
   Body,
-  Query,
-  ParseIntPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreatemessageDto } from './dtos/create-messages.dto';
+import { MessagesService } from './messages.service';
 
 @Controller('messages')
 export class MessagesController {
+  MessagesService: MessagesService;
+  constructor() {
+    this.MessagesService = new MessagesService();
+  }
   @Get('/:id')
-  getMessage(@Param('id', ParseIntPipe) id: number, @Query() query: string) {
-    return `am the messsage with id:${id} and query:${query}`;
+  async getMessage(@Param('id') id: string) {
+    const message = await this.MessagesService.findOne(id);
+    if (!message) {
+      throw new NotFoundException(`message with id: ${id} does not exist`);
+    }
+    return message;
   }
   @Post()
   createMessage(@Body() body: CreatemessageDto) {
-    return `${body}`;
+    return this.MessagesService.create(body.content);
   }
   @Get()
-  listMessages(): string[] {
-    return ['hello', 'you'];
+  listMessages() {
+    return this.MessagesService.findAll();
   }
 }
